@@ -1,0 +1,10 @@
+.container {
+  max-width: 960px;
+}
+
+.lh-condensed { line-height: 1.25; }
+
+.help, p.help, form p.help, div.help, form div.help, div.help li {
+    font-size: 11px;
+    color: #999;
+}

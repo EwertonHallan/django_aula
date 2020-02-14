@@ -1,0 +1,42 @@
+{% extends 'pessoa/base.html' %}
+
+{% block main %}
+    {% if detalhe %}
+      <h3 class="teste">Detalhe do Cadastro [Pessoa]</h3>
+      <table border="1">
+          <tr>
+              <td><label>ID</label></td>
+              <td>{{ detalhe.id }}</td>
+          </tr>
+          <tr>
+              <td><label>Nome</label></td>
+              <td>
+                  <!--
+                     criando uma forma amigavel de tratamento
+                  -->
+                  ({{ pronome }}) {{ detalhe.nome }}
+              </td>
+          </tr>
+          <tr>
+              <td><label>Pai</label></td>
+              <td>{{ detalhe.pai }}</td>
+          </tr>
+          <tr>
+              <td><label>Mae</label></td>
+              <td>{{ detalhe.mae }}</td>
+          </tr>
+          <tr>
+              <td><label>Foto</label></td>
+              <td>{{ detalhe.foto }}</td>
+          </tr>
+      </table>
+      <br>
+    {% else %}
+       <p>nenhum dado foi localizado</p>
+    {% endif %}
+
+    <button class="btn btn-info" onclick="window.history.go(-1); return false;">voltar</button>
+    <button class="btn btn-secondary" onclick="olaMundo()">JavaScript</button>
+
+{% endblock%}
+

@@ -1,0 +1,13 @@
+
+# http://turing.com.br/material/acpython/mod3/django/views1.html#localizacao-dos-templates
+#expressao regulares
+# a = (re.search(r'^teste[a-z]{1}$','testes'))
+# a = (re.search(r'^teste￿\w+','testes'))
+# a = (re.search(r'^teste￿[a-z][A-Z]y','testes'))
+# a = (re.search(r'[P]y','python Python'))
+# print(re.search(r'clientes/\d{1,3}$','clientes/123').group())
+# print(re.search(r'clientes/\d+$','clientes/123').group())
+# print(re.split(r'clientes/(￿?P<id>\d+)$','www.site.com.br/clientes/123'))
+# print(re.split(r'(clientes)/(￿?P<id>\d+)$','www.site.com.br/clientes/123'))
+#https://www.datacamp.com/community/tutorials/python-regular-expression-tutorial
+#https://docs.python.org/3.6/library/re.html

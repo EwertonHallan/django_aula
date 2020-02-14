@@ -1,0 +1,15 @@
+{% include 'pessoa/_header.html' %}
+
+      <h1>Relacao de Pessoas</h1>
+    {% if lista_pessoa %}
+      <ul>
+          {% for p in lista_pessoa %}
+              <!-- ><li><a href="/pessoa￿/detalhe/{{ p.id }}/">{{ p.nome }}</a></li> -->
+              <li><a href="/pessoa/id/{{ p.id }}/"> {{ p.id }} - {{ p.nome }}</a></li>
+          {% endfor %}
+      </ul>
+    {% else %}
+       <p>nenhum dado foi localizado</p>
+    {% endif %}
+
+{% include 'pessoa/_footer.html' %}

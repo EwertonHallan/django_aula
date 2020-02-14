@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+{% load crisp_forms_tags %}  ## carregando a biblioteca
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro</title>
+    <link rel="stylesheet"
+          href="https:￿￿//stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous"
+    > ## importando o bootstrap
+</head>
+<body>
+    <main class="container">
+    {{ form￿|crispy }}
+        <button type="submit">Cadastrar</button>
+    <br>
+    <br>
+    <h3>Listagem de PESSOAS</h3>
+    <ul>
+    {% for pessoas in lista_pessoa %}
+        <li>{{ pessoas.id }} - {{ pessoas.nome }}</li>
+    {% endfor %}
+    </ul>
+    </main>
+</body>
+</html>
