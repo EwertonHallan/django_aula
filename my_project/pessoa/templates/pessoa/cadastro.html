@@ -6,7 +6,27 @@
     <title>Cadastro</title>
     <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'form-validation.css' %}">
+    <script src="{% static 'jquery-3.4.1.min.js' %}"></script>
+    <script src="{% static 'jquery.mask.min.js' %}"></script>
+    <script src="{% static 'app.js' %}"></script>
+    <script>
 
+        $(function() {
+            $('#id_cpf').blur(function(){
+                var num = $(this).val();
+
+                if (!validaCPF(num)) {
+                    $('#help_cpf').append(' ->> ERRO. <<-');
+                    alert('Numero:' + num);
+                }
+            });
+
+            $('#id_cpf').focus(function(){
+                $('#id_cpf').mask('000.000.000-00');
+            });
+
+        });
+    </script>
 </head>
 <body class="bg-light">
     <div class="container">
@@ -25,7 +45,8 @@
                     <div class="mb-3">
                         {{ field.label_tag }}
                         {{ field }}
-                        <div class="help">
+                        <!-- ## testando campo cpf -->
+                        <div id="help_{{ field.html_name }}" class="help">
                             {{ field.help_text }}
                         </div>
                     </div>

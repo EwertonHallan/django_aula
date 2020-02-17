@@ -46,7 +46,8 @@ class Pessoa(models.Model):
         verbose_name='Número do RG',
         unique=True,
     )
-    cpf=models.IntegerField(
+    cpf=models.CharField(
+        max_length=15,
         help_text='Escreva aqui somente os numeros do CPF',
         verbose_name='Número do CPF',
         unique=True,
