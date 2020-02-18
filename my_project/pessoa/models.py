@@ -14,14 +14,22 @@ def validate_even(value):
 
 
 # Create your models here.
-class Sexo(models.Model):
+class Genero(models.Model):
     """
     Classe para conter os generos adotados no instituto
     model:'pessoa.Pessoa'
     autor:'Ewerton Hallan'
     """
     descricao=models.CharField(
-        max_length=20
+        max_length=20,
+        null=False,
+        blank=False,
+        help_text='Escreva aqui o nome do genero',
+        verbose_name='Nome do Genero',
+        error_messages={
+            'null': 'Valor nulo nao permitido',
+            'blank': 'Valor vazio',
+        }
     )
     def __str__(self):
         return self.descricao
@@ -40,7 +48,7 @@ class Pessoa(models.Model):
         }
     )
     #1-m -> ForeingKey, 1-1 -> OneToOneField, m-m -> ManyToManyField
-    genero=models.ForeignKey(Sexo)
+    genero=models.ForeignKey(Genero)
     rg=models.IntegerField(
         help_text='Escreva aqui somente os numeros do RG',
         verbose_name='Número do RG',

@@ -11,7 +11,13 @@
                         <a href="/pessoa/usuario/"> Cadastrar Usuario</a>
                     </li>
                     <li class="list-group-item d-flex justify-content-between lh-condensed">
-                        <a href="/pessoa/lista/"> Lista de Pessoas</a>
+                        <a class=”nav-link” href="{% url 'pessoa_usuario_lista' %}"> Lista de Pessoas</a>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-condensed">
+                        <a href="/pessoa/genero/"> Cadastrar Genero</a>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-condensed">
+                        <a class=”nav-link” href="{% url 'pessoa_genero_lista' %}"> Lista de Generos</a>
                     </li>
                     {% if user.is_authenticated %}
                     <li class="list-group-item d-flex justify-content-between lh-condensed">

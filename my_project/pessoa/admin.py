@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from django.contrib import  admin
 
-from pessoa.models import Pessoa, Poll, Choice, Sexo
+from .models import *
 
 # Register your models here.
 
@@ -24,6 +24,6 @@ class PessoaAdmin(admin.ModelAdmin):
 #admin.site.register(Pessoa, PessoaAdmin)
 admin.site.register(Poll)
 admin.site.register(Choice)
-admin.site.register(Sexo)
+admin.site.register(Genero)
 
 

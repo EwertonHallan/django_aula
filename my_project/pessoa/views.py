@@ -7,12 +7,20 @@ from django.shortcuts import render, redirect
 # from .forms import PessoaForm
 from django.urls import reverse_lazy
 
-from .forms import PessoaForm
-from .models import Pessoa
+from .forms import PessoaForm, GeneroForm
+from .models import Pessoa, Genero
 from crispy_forms import *
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .util import firstChar
+
+class Obj_Lista():
+    def __init__(self, id, nome):
+        self.id = id
+        self.nome = nome
+    def __str__(self):
+        return self.nome
+
 
 # Create your views here.
 def pessoa_id(request, p_id):
@@ -32,9 +40,8 @@ def pessoa_list(request):
 
 #usa o templete generico de cadastro
 def pessoa_usuario(request):
-    pessoas = Pessoa.objects.all()
     form = PessoaForm()
-    contexto = {'lista_pessoa':pessoas, 'form':form}
+    contexto = {'form':form}
     return render(request, "pessoa/cadastro.html", contexto)
 
 def pessoa_usuario_novo(request):
@@ -42,6 +49,56 @@ def pessoa_usuario_novo(request):
     if form.is_valid():
         form.save()
     return redirect('pessoa_usuario')
+
+def pessoa_usuario_lista(request):
+    if not(request.user.is_authenticated):
+       return redirect('login')
+    else:
+        dados = Pessoa.objects.all()
+        result = []
+        for i in range(len(dados)):
+            obj = Obj_Lista(dados[i].id, dados[i].nome)
+            result.append(obj)
+
+        contexto = {'lista':result, 'titulo':'Pessoas', 'url':'/pessoa/usuario_detalhe/'}
+        return render(request, 'pessoa/listagem.html', contexto)
+
+def pessoa_usuario_detalhe(request, p_id):
+    dados = Pessoa.objects.select_related().get(id=p_id)
+    contexto = {'detalhe':dados, 'titulo':'Usuario'}
+    contexto['pronome'] = dados.getPronomeTratamento()
+
+    return render(request, 'pessoa/usuario_detalhe.html', contexto)
+
+def pessoa_genero(request):
+    form = GeneroForm()
+    contexto = {'form':form}
+    return render(request, "pessoa/cadastro.html", contexto)
+
+def pessoa_genero_novo(request):
+    form = GeneroForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+    return redirect('pessoa_genero')
+
+def pessoa_genero_lista(request):
+    if not(request.user.is_authenticated):
+       return redirect('login')
+    else:
+        dados = Genero.objects.all()
+        result = []
+        for i in range(len(dados)):
+            obj = Obj_Lista(dados[i].id, dados[i].descricao)
+            result.append(obj)
+
+        contexto = {'lista':result, 'titulo':'Generos', 'url':'/pessoa/genero_detalhe/'}
+        return render(request, 'pessoa/listagem.html', contexto)
+
+def pessoa_genero_detalhe(request, p_id):
+    dados = Genero.objects.select_related().get(id=p_id)
+    contexto = {'detalhe':dados}
+
+    return render(request, 'pessoa/genero_detalhe.html', contexto)
 
 def pessoa_detalhe(request):
     return render(request, 'pessoa/pessoa_detail.html', {})

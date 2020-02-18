@@ -1,0 +1,17 @@
+{% extends 'pessoa/base.html' %}
+
+{% block main %}
+<body class="bg-light">
+    <h1>Relacao de {{ titulo }}</h1>
+    {% if lista %}
+      <ul>
+          {% for p in lista %}
+              <!-- ><li><a href="/pessoa￿/detalhe/{{ p.id }}/">{{ p.nome }}</a></li> -->
+              <li><a href="{{ url }}{{ p.id }}/"> {{ p.id }} - {{ p.nome }}</a></li>
+          {% endfor %}
+      </ul>
+    {% else %}
+       <p>nenhum dado foi localizado</p>
+    {% endif %}
+
+{% endblock%}

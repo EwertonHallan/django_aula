@@ -1,0 +1,36 @@
+{% extends 'pessoa/base.html' %}
+
+{% block main %}
+<body class="bg-light">
+    <h1>Relacao de {{ titulo }}</h1>
+    {% if detalhe %}
+      <table border="1">
+          <tr>
+              <td><label>ID</label></td>
+              <td>{{ detalhe.id }}</td>
+          </tr>
+          <tr>
+              <td><label>Nome</label></td>
+              <td>{{ detalhe.nome }}</td>
+          </tr>
+          <tr>
+              <td><label>Pai</label></td>
+              <td>{{ detalhe.pai }}</td>
+          </tr>
+          <tr>
+              <td><label>Mae</label></td>
+              <td>{{ detalhe.mae }}</td>
+          </tr>
+          <tr>
+              <td><label>Foto</label></td>
+              <td>{{ detalhe.foto }}</td>
+          </tr>
+      </table>
+    {% else %}
+       <p>nenhum dado foi localizado</p>
+    {% endif %}
+
+    <button class="btn btn-info" onclick="window.history.go(-1); return false;">voltar</button>
+    <button class="btn btn-secondary" onclick="olaMundo()">Editar</button>
+
+{% endblock%}
