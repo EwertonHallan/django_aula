@@ -1,33 +1,6 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Cadastro</title>
-    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'form-validation.css' %}">
-    <script src="{% static 'jquery-3.4.1.min.js' %}"></script>
-    <script src="{% static 'jquery.mask.min.js' %}"></script>
-    <script src="{% static 'app.js' %}"></script>
-    <script>
+{% extends 'pessoa/base.html' %}
 
-        $(function() {
-            $('#id_cpf').blur(function(){
-                var num = $(this).val();
-
-                if (!validaCPF(num)) {
-                    $('#help_cpf').append(' ->> ERRO. <<-');
-                    alert('Numero:' + num);
-                }
-            });
-
-            $('#id_cpf').focus(function(){
-                $('#id_cpf').mask('000.000.000-00');
-            });
-
-        });
-    </script>
-</head>
+{% block main %}
 <body class="bg-light">
     <div class="container">
         <h4 class="mb-3">FICHA DE CADASTRO</h4>
@@ -69,22 +42,7 @@
         </form>
         <br>
     </div>
-    <br><br><br>
-    <div class="container">
-        <h3>Listagem de PESSOAS</h3>
-        <div class="row">
-            <ul class="list-group mb-3">
-            {% for pessoas in lista_pessoa %}
-                <li class="list-group-item d-flex justify-content-between lh-condensed">
-                    {{ pessoas.id }} - {{ pessoas.nome }}
-                </li>
-            {% endfor %}
-            </ul>
-        </div>
-    </div>
-
-
-</body>
-</html>
-
+{% endblock%}
+<!--
 #https://django-portuguese.readthedocs.io/en/1.0/intro/tutorial04.html
+-->

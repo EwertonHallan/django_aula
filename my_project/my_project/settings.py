@@ -141,4 +141,6 @@ DECIMAL_SEPARATOR = ','
 
 THOUSAND_SEPARATOR = '.'
 
+LOGIN_REDIRECT_URL = '/pessoa/'
+LOGOUT_REDIRECT_URL = '/login/'
 #https://docs.djangoproject.com/en/1.11/ref/settings/#date-input-formats

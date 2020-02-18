@@ -18,10 +18,16 @@ from django.contrib import admin
 from django.views.generic import RedirectView
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
+from django.urls import reverse_lazy
 
 urlpatterns = [
-    url('^$', RedirectView.as_view(url='/pessoa/')),
+    url('^$', RedirectView.as_view(url='/login/')),
     url(r'^admin/', admin.site.urls),
+    url('^account/', include('django.contrib.auth.urls')),
+    url('^login/$', auth_views.LoginView.as_view(template_name='pessoa/login.html'), name='login'),
+    url('sair/$', auth_views.LogoutView.as_view(), name='logout'),
+    url('^alterar-minha-senha/$', auth_views.PasswordChangeView.as_view(template_name='pessoa/password.html'), name='alterar-senha'),
     url(r'^pessoa/', include('pessoa.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

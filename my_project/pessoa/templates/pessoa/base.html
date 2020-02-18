@@ -1,17 +1,40 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-    <script src="{% static 'app.js' %}"></script>
-</head>
-<body>
-    {% block main %}
+{% include 'pessoa/_header.html' %}
 
-    {% endblock %}
-</body>
-</html>
+<body class="bg-light">
+    <div id="divError" style="display:none">path</div>
+    <div class="row">
+        <div class="col-md-5 mb-3">
+            <h3>OPÇAO DE MENU</h3>
+            <div class="row">
+                <ul class="list-group mb-3">
+                    <li class="list-group-item d-flex justify-content-between lh-condensed">
+                        <a href="/pessoa/usuario/"> Cadastrar Usuario</a>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-condensed">
+                        <a href="/pessoa/lista/"> Lista de Pessoas</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="list-group-item d-flex justify-content-between lh-condensed">
+                        <a class=”nav-link” href="{% url 'alterar-senha' %}"> Mudar Senha</a>
+                    </li>
+                    {% endif %}
+                    <li class="list-group-item d-flex justify-content-between lh-condensed">
+                        {% if user.is_authenticated %}
+                            Olá {{ user.username }},
+                        {% endif %}
+                        <a class=”nav-link” href="{% url 'logout' %}">SAIR</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
+        <div class="col-md-5 mb-3">
+            <div class="container">
+                {% block main %}
+
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+{% include 'pessoa/_footer.html' %}

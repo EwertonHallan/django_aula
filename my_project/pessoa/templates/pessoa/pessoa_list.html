@@ -1,6 +1,8 @@
-{% include 'pessoa/_header.html' %}
+{% extends 'pessoa/base.html' %}
 
-      <h1>Relacao de Pessoas</h1>
+{% block main %}
+<body class="bg-light">
+    <h1>Relacao de Pessoas</h1>
     {% if lista_pessoa %}
       <ul>
           {% for p in lista_pessoa %}
@@ -12,4 +14,4 @@
        <p>nenhum dado foi localizado</p>
     {% endif %}
 
-{% include 'pessoa/_footer.html' %}
+{% endblock%}

@@ -4,10 +4,33 @@ https://jinja.palletsprojects.com/en/2.11.x/templates/
 ver a parte de macro, call
 
 -->
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Criando Projeto DJango</title>
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'form-validation.css' %}">
+    <script src="{% static 'jquery-3.4.1.min.js' %}"></script>
+    <script src="{% static 'jquery.mask.min.js' %}"></script>
+    <script src="{% static 'app.js' %}"></script>
+    <script>
+
+        $(function() {
+            $('#id_cpf').blur(function(){
+                var num = $(this).val();
+
+                if (!validaCPF(num)) {
+                    $('#help_cpf').append(' ->> ERRO. <<-');
+                    alert('Numero:' + num);
+                }
+            });
+
+            $('#id_cpf').focus(function(){
+                $('#id_cpf').mask('000.000.000-00');
+            });
+
+        });
+    </script>
 </head>
-<body>
