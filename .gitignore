@@ -29,6 +29,7 @@
 # Projeto DJango em PyCharm (safe to delete)
 *.swp
 *.exe
+.DS_Store
 
 # Delphi history and backups
 __history/
