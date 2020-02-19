@@ -1,3 +1,4 @@
+{% spaceless %}
 <div class="container">
     <div class="row">
         <div class="col-md-3 mb-3">
@@ -7,9 +8,10 @@
             <strong>Coluna 02</strong>
         </div>
         <div class="col-md-3 mb-3">
-            <strong>Coluna 03</strong>
+            <strong>{% now "jS F Y H:i" %}</strong>
         </div>
     </div>
 </div>
 </body>
+{% endspaceless %}
 </html>

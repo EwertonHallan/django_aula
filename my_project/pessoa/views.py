@@ -21,6 +21,13 @@ class Obj_Lista():
     def __str__(self):
         return self.nome
 
+class Obj_Detalhe():
+    def __init__(self, titulo, valor):
+        self.titulo = titulo
+        self.valor = valor
+    def __str__(self):
+        return self.titulo + '-' + self.valor
+
 
 # Create your views here.
 def pessoa_id(request, p_id):
@@ -55,20 +62,46 @@ def pessoa_usuario_lista(request):
        return redirect('login')
     else:
         dados = Pessoa.objects.all()
+
+        filtro = request.GET
+        filtro = request.GET.get('\u201dsearch\u201d')
+
+        if filtro:
+            dados = Pessoa.objects.filter(nome__icontains=filtro)
+
         result = []
         for i in range(len(dados)):
             obj = Obj_Lista(dados[i].id, dados[i].nome)
             result.append(obj)
 
-        contexto = {'lista':result, 'titulo':'Pessoas', 'url':'/pessoa/usuario_detalhe/'}
+        #filtro = request.GET.get('\u201dsearch\u201d') + '->' + request.META['REMOTE_ADDR'] + '' + request.user.username
+        #filtro = '\u201dsearch\u201d'[1:7]
+        contexto = {
+            'lista':result,
+            'titulo':'Pessoas',
+            'url':'/pessoa/usuario_detalhe/',
+            'str_busca':filtro
+        }
         return render(request, 'pessoa/listagem.html', contexto)
 
 def pessoa_usuario_detalhe(request, p_id):
-    dados = Pessoa.objects.select_related().get(id=p_id)
-    contexto = {'detalhe':dados, 'titulo':'Usuario'}
-    contexto['pronome'] = dados.getPronomeTratamento()
+    if not(request.user.is_authenticated):
+       return redirect('login')
+    else:
+        dados = Pessoa.objects.select_related().get(id=p_id)
+        result = []
+        result.append(Obj_Detalhe('ID',dados.id))
+        result.append(Obj_Detalhe('Nome',dados.getPronomeTratamento() + ' ' + dados.nome))
+        result.append(Obj_Detalhe('Pai',dados.pai))
+        result.append(Obj_Detalhe('Mae',dados.mae))
+        result.append(Obj_Detalhe('RG',dados.rg))
+        result.append(Obj_Detalhe('CPF',dados.cpf))
+        #result.append(Obj_Detalhe('Foto',"<a href='/upload/" + str(dados.foto) + "' target='_blank'> Visualizar Foto </a>"))
+        result.append(Obj_Detalhe('Foto',"<img src='/upload/" + str(dados.foto) + "' width='130px'/>"))
 
-    return render(request, 'pessoa/usuario_detalhe.html', contexto)
+    contexto = {'detalhe':result, 'titulo':'Usuario'}
+
+    return render(request, 'pessoa/detalhe.html', contexto)
 
 def pessoa_genero(request):
     form = GeneroForm()
@@ -91,14 +124,22 @@ def pessoa_genero_lista(request):
             obj = Obj_Lista(dados[i].id, dados[i].descricao)
             result.append(obj)
 
+        #contexto = {'lista':result, 'titulo':'Generos', 'url':'/pessoa/genero_detalhe/'}
         contexto = {'lista':result, 'titulo':'Generos', 'url':'/pessoa/genero_detalhe/'}
         return render(request, 'pessoa/listagem.html', contexto)
 
 def pessoa_genero_detalhe(request, p_id):
-    dados = Genero.objects.select_related().get(id=p_id)
-    contexto = {'detalhe':dados}
+    if not(request.user.is_authenticated):
+       return redirect('login')
+    else:
+        dados = Genero.objects.select_related().get(id=p_id)
+        result = []
+        result.append(Obj_Detalhe('ID',dados.id))
+        result.append(Obj_Detalhe('Descricao',dados.descricao))
 
-    return render(request, 'pessoa/genero_detalhe.html', contexto)
+    contexto = {'detalhe':result, 'titulo':'Genero'}
+
+    return render(request, 'pessoa/detalhe.html', contexto)
 
 def pessoa_detalhe(request):
     return render(request, 'pessoa/pessoa_detail.html', {})

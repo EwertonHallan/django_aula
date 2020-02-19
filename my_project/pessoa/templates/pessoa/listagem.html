@@ -3,6 +3,13 @@
 {% block main %}
 <body class="bg-light">
     <h1>Relacao de {{ titulo }}</h1>
+    <form method=”GET” action=".">
+        <div class=”input-group-prepend”>
+            <button class=”btn btn-outline-secondary” type=”submit” id=”bt_search">Buscar</button>
+            <input type=”text” class=”form-control” placeholder=”” name=”search” id=”search”>
+        </div>
+    </form>
+    <p class="help">filtro: {{ str_busca }}</p>
     {% if lista %}
       <ul>
           {% for p in lista %}
