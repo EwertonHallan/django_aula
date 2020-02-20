@@ -7,6 +7,7 @@ class PessoaForm(forms.ModelForm):
         fields = ["nome", "genero", "estadocivil", "idade", "pai", "mae",
                   "rg", "cpf", "email", "telefone", "foto"
                   ]
+
 class GeneroForm(forms.ModelForm):
     class Meta:
         model = Genero

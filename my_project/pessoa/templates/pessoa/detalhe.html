@@ -22,11 +22,14 @@
         </div>
         <br>
         <div class="row">
-            <div class="col-md-5 mb-3">
+            <div class="col-md-3 mb-3">
                 <button class="btn btn-info" onclick="window.history.go(-1); return false;">voltar</button>
             </div>
-            <div class="col-md-5 mb-3">
-                <button class="btn btn-secondary" onclick="olaMundo()">Editar</button>
+            <div class="col-md-3 mb-3">
+                <button class="btn btn-secondary" onclick="location.href='/pessoa/usuario_edicao/{{ parametro_id }}'; return false;">Editar</button>
+            </div>
+            <div class="col-md-3 mb-3">
+                <button class="btn btn-secondary" onclick="olaMundo()">Teste</button>
             </div>
         </div>
     </div>

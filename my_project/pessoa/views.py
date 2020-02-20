@@ -48,7 +48,7 @@ def pessoa_list(request):
 #usa o templete generico de cadastro
 def pessoa_usuario(request):
     form = PessoaForm()
-    contexto = {'form':form}
+    contexto = {'form':form, 'titulo':'Ficha de Cadastro [NOVO]'}
     return render(request, "pessoa/cadastro.html", contexto)
 
 def pessoa_usuario_novo(request):
@@ -56,6 +56,21 @@ def pessoa_usuario_novo(request):
     if form.is_valid():
         form.save()
     return redirect('pessoa_usuario')
+
+def pessoa_usuario_edicao(request, p_id):
+    dados = Pessoa.objects.select_related().get(id=p_id)
+    form = PessoaForm(request.POST or None, instance=dados)
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return redirect('pessoa_usuario_lista')
+    else:
+        contexto = {
+            'dados':dados,
+            'form': form,
+            'titulo': 'Ficha de Cadastro [MODIFICACAO]'
+            }
+        return render(request,'pessoa/cadastro.html',contexto)
 
 def pessoa_usuario_lista(request):
     if not(request.user.is_authenticated):
@@ -99,13 +114,13 @@ def pessoa_usuario_detalhe(request, p_id):
         #result.append(Obj_Detalhe('Foto',"<a href='/upload/" + str(dados.foto) + "' target='_blank'> Visualizar Foto </a>"))
         result.append(Obj_Detalhe('Foto',"<img src='/upload/" + str(dados.foto) + "' width='130px'/>"))
 
-    contexto = {'detalhe':result, 'titulo':'Usuario'}
+    contexto = {'detalhe':result, 'titulo':'Usuario','parametro_id':p_id}
 
     return render(request, 'pessoa/detalhe.html', contexto)
 
 def pessoa_genero(request):
     form = GeneroForm()
-    contexto = {'form':form}
+    contexto = {'form':form, 'titulo':'Cadastro de Genero [NOVO]'}
     return render(request, "pessoa/cadastro.html", contexto)
 
 def pessoa_genero_novo(request):

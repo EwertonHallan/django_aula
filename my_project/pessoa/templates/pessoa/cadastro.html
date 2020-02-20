@@ -1,12 +1,51 @@
 {% extends 'pessoa/base.html' %}
 
 {% block main %}
-{% spaceless %}
+
+    <script>
+
+        $(function() {
+            $('#id_cpf').blur(function(){
+                var num = $(this).val();
+
+                if (!validaCPF(num)) {
+                    $('#help_cpf').append(' ->> ERRO. <<-');
+                    alert('Numero:' + num);
+                }
+            });
+
+            $('#id_cpf').focus(function(){
+                $('#id_cpf').mask('000.000.000-00');
+            });
+
+            $('#id_telefone').focus(function(){
+                $('#id_telefone').mask('(00) 00000-0000');
+            });
+
+        });
+    </script>
+
     <div class="container">
-        <h4 class="mb-3">FICHA DE CADASTRO</h4>
+        <h4 class="mb-3">{{ titulo }}</h4>
         <div class="row">
-        <form class="needs-validation" action="{% url 'pessoa_usuario_novo' %}" method="POST">
+            {% if dados %}
+            <form class="needs-validation" action="{% url 'pessoa_usuario_edicao' dados.id %}" method="POST">
+            {% else %}
+            <form class="needs-validation" action="{% url 'pessoa_usuario_novo' %}" method="POST">
+            {% endif %}
+
             {% csrf_token %}
+
+            {% if dados %}
+            <div class="row">
+                <div class="mb-3">
+                    ID:&nbsp;{{ dados.id }}
+                    <div id="cad_id" class="help">
+                        Identificador interno do sistema
+                    </div>
+                </div>
+            </div>
+            {% endif %}
 
             {% for field in form %}
             <div class="row">
@@ -42,7 +81,7 @@
         </form>
         <br>
     </div>
-{% endspaceless %}
+
 {% endblock%}
 <!--
 #https://django-portuguese.readthedocs.io/en/1.0/intro/tutorial04.html
