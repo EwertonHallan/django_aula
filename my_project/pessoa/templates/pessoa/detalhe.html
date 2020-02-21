@@ -26,10 +26,10 @@
                 <button class="btn btn-info" onclick="window.history.go(-1); return false;">voltar</button>
             </div>
             <div class="col-md-3 mb-3">
-                <button class="btn btn-secondary" onclick="location.href='/pessoa/usuario_edicao/{{ parametro_id }}'; return false;">Editar</button>
+                <button class="btn btn-secondary" onclick="location.href='{{ url_edicao }}'; return false;">Editar</button>
             </div>
             <div class="col-md-3 mb-3">
-                <button class="btn btn-secondary" onclick="olaMundo()">Teste</button>
+                <button class="btn btn-secondary" onclick="location.href='{{ url_remocao}}'; return false;">Remover</button>
             </div>
         </div>
     </div>

@@ -77,7 +77,12 @@ def pessoa_usuario(request):
        return redirect('login')
     else:
         form = PessoaForm()
-        contexto = {'form':form, 'titulo':'Ficha de Cadastro [NOVO]'}
+        url_form = url_form = '/pessoa/usuario_novo/'
+        contexto = {
+            'form':form,
+            'titulo':'Ficha de Cadastro [NOVO]',
+            'url_form':url_form
+        }
         return render(request, "pessoa/cadastro.html", contexto)
 
 def pessoa_usuario_novo(request):
@@ -120,12 +125,32 @@ def pessoa_usuario_edicao(request, p_id):
 
                 return redirect('pessoa_usuario_lista')
         else:
+            url_form = url_form = '/pessoa/usuario_edicao/'+str(dados.id)+'/'
             contexto = {
                 'dados':dados,
                 'form': form,
-                'titulo': 'Ficha de Cadastro [MODIFICACAO]'
+                'titulo': 'Ficha de Cadastro [MODIFICACAO]',
+                'url_form': url_form
                 }
             return render(request,'pessoa/cadastro.html',contexto)
+
+def pessoa_usuario_remove(request, p_id):
+    if not(request.user.is_authenticated):
+       return redirect('login')
+    else:
+        dados = Pessoa.objects.select_related().get(id=p_id)
+        if request.method == 'POST':
+            dados.delete()
+            return redirect('pessoa_usuario_lista')
+        else:
+            url_form = '/pessoa/usuario_remove/'+str(dados.id)+'/'
+            url_detalhe = '/pessoa/usuario_detalhe/'+str(dados.id)+'/'
+            contexto = {
+                'url_form':url_form,
+                'url_detalhe':url_detalhe,
+                'dados': dados,
+            }
+            return render(request,'pessoa/confirmacao.html', contexto)
 
 def pessoa_usuario_lista(request):
     if not(request.user.is_authenticated):
@@ -174,7 +199,14 @@ def pessoa_usuario_detalhe(request, p_id):
             url_img = dados.foto.url
         result.append(Obj_Detalhe('Foto',"<img src='" + url_img + "' class='img-fluid' />"))
 
-    contexto = {'detalhe':result, 'titulo':'Usuario','parametro_id':p_id}
+    #contexto = {'detalhe':result, 'titulo':'Usuario','parametro_id':p_id}
+
+    contexto = {
+        'detalhe':result,
+        'titulo':'Usuario',
+        'url_edicao':'/pessoa/usuario_edicao/'+str(p_id)+'/',
+        'url_remocao':'/pessoa/usuario_remove/'+str(p_id)+'/',
+    }
 
     return render(request, 'pessoa/detalhe.html', contexto)
 
@@ -183,7 +215,12 @@ def pessoa_genero(request):
        return redirect('login')
     else:
         form = GeneroForm()
-        contexto = {'form':form, 'titulo':'Cadastro de Genero [NOVO]'}
+        url_form = url_form = '/pessoa/genero_novo/'
+        contexto = {
+            'form':form,
+            'titulo':'Cadastro de Genero [NOVO]',
+            'url_form':url_form
+        }
         return render(request, "pessoa/cadastro.html", contexto)
 
 def pessoa_genero_novo(request):
@@ -194,6 +231,45 @@ def pessoa_genero_novo(request):
         if form.is_valid():
             form.save()
         return redirect('pessoa_genero')
+
+def pessoa_genero_edicao(request, p_id):
+    if not(request.user.is_authenticated):
+       return redirect('login')
+    else:
+        dados = Genero.objects.select_related().get(id=p_id)
+        form = GeneroForm(request.POST or None, instance=dados)
+        if request.method == 'POST':
+            if form.is_valid():
+                form.save()
+
+                return redirect('pessoa_genero_lista')
+        else:
+            url_form = url_form = '/pessoa/genero_edicao/' + str(dados.id) + '/'
+            contexto = {
+                'dados':dados,
+                'form': form,
+                'titulo': 'Cadastro de Genero [MODIFICACAO]',
+                'url_form':url_form
+                }
+            return render(request,'pessoa/cadastro.html',contexto)
+
+def pessoa_genero_remove(request, p_id):
+    if not(request.user.is_authenticated):
+       return redirect('login')
+    else:
+        dados = Genero.objects.select_related().get(id=p_id)
+        if request.method == 'POST':
+            dados.delete()
+            return redirect('pessoa_genero_lista')
+        else:
+            url_form = '/pessoa/genero_remove/'+str(dados.id)+'/'
+            url_detalhe = '/pessoa/genero_detalhe/'+str(dados.id)+'/'
+            contexto = {
+                'url_form':url_form,
+                'url_detalhe':url_detalhe,
+                'dados': dados,
+            }
+            return render(request,'pessoa/confirmacao.html', contexto)
 
 def pessoa_genero_lista(request):
     if not(request.user.is_authenticated):
@@ -218,7 +294,12 @@ def pessoa_genero_detalhe(request, p_id):
         result.append(Obj_Detalhe('ID',dados.id))
         result.append(Obj_Detalhe('Descricao',dados.descricao))
 
-    contexto = {'detalhe':result, 'titulo':'Genero'}
+    contexto = {
+        'detalhe':result,
+        'titulo':'Genero',
+        'url_edicao':'/pessoa/genero_edicao/'+str(p_id)+'/',
+        'url_remocao':'/pessoa/genero_remove/'+str(p_id)+'/',
+    }
 
     return render(request, 'pessoa/detalhe.html', contexto)
 

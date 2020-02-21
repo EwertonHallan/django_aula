@@ -1,0 +1,14 @@
+<h3>Tem certeza que deseja remover:<br>
+{{ dados }},<br>
+confirma ?</h3>
+
+<!--
+<form class="needs-validation" action="{% url 'pessoa_usuario_remove' dados.id %}" method="POST">
+            onclick="location.href='/pessoa/usuario_detalhe/{{ dados.id }}'; return false;">NAO</button>
+-->
+<form class="needs-validation" action="{{ url_form }}" method="POST">
+    {% csrf_token %}
+    <button type="submit">SIM</button>
+    <button type="button" value="NAO"
+            onclick="location.href='{{ url_detalhe }}'; return false;">NAO</button>
+</form>
