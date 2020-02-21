@@ -5,6 +5,9 @@ from django.core.exceptions import ValidationError
 from django.db import models
 
 # VALIDADORES
+from django.db.models import DateTimeField
+
+
 def validate_even(value):
     if value <= 10:
         raise ValidationError(
@@ -12,6 +15,13 @@ def validate_even(value):
             params={'value': value},
         )
 
+
+class Documento(models.Model):
+    descricao = models.CharField(max_length=255, blank=True)
+    file = models.ImageField(upload_to='pessoa_fotos/')
+    upload_data = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.descricao
 
 # Create your models here.
 class Genero(models.Model):
@@ -105,7 +115,9 @@ class Pessoa(models.Model):
     )
     foto=models.ImageField(
         upload_to='pessoa_fotos/',
+        default='pessoa_fotos/none.jpg',
         blank=True,
+        null=True,
         help_text = 'Escolha uma foto para o seu perfil',
         verbose_name = 'Foto',
     )

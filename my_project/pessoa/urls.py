@@ -25,6 +25,7 @@ urlpatterns = [
     #url(r'^lista/$', views.pessoa_list, name='livros_info'),
     #url(r'^id/(?P<p_id>[0-9]{,2})/$', views.pessoa_id, name='Detalhe_ID'),
     #url(r'^cadastro/$', views.cadastrar_usuario, name='Cadastro'),
+    url(r'^upload/$', views.simple_upload, name='Upload'),
     url(r'^usuario/$', views.pessoa_usuario, name='pessoa_usuario'),
     url(r'^usuario_novo/', views.pessoa_usuario_novo, name='pessoa_usuario_novo'),
     url(r'^usuario_edicao/(?P<p_id>\d+)/$', views.pessoa_usuario_edicao, name='pessoa_usuario_edicao'),
