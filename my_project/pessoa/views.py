@@ -276,13 +276,22 @@ def pessoa_genero_lista(request):
        return redirect('login')
     else:
         dados = Genero.objects.all()
+        filtro = request.GET
+        filtro = request.GET.get('\u201dsearch\u201d')
+        if filtro:
+            dados = Genero.objects.filter(descricao__icontains=filtro)
+
         result = []
         for i in range(len(dados)):
             obj = Obj_Lista(dados[i].id, dados[i])
             result.append(obj)
 
-        #contexto = {'lista':result, 'titulo':'Generos', 'url':'/pessoa/genero_detalhe/'}
-        contexto = {'lista':result, 'titulo':'Generos', 'url':'/pessoa/genero_detalhe/'}
+        contexto = {
+            'lista':result,
+            'titulo':'Generos',
+            'url':'/pessoa/genero_detalhe/',
+            'str_busca': filtro
+        }
         return render(request, 'pessoa/listagem.html', contexto)
 
 def pessoa_genero_detalhe(request, p_id):
