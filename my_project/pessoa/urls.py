@@ -23,7 +23,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     url(r'^$', views.pessoa_usuario_lista, name='livros_info'),
     #url(r'^lista/$', views.pessoa_list, name='livros_info'),
-    #url(r'^id/(?P<p_id>[0-9]{,2})/$', views.pessoa_id, name='Detalhe_ID'),
+    url(r'^id/(?P<p_id>[0-9]{,2})/$', views.pessoa_id, name='Detalhe_ID'),
     #url(r'^cadastro/$', views.cadastrar_usuario, name='Cadastro'),
     url(r'^upload/$', views.simple_upload, name='Upload'),
     url(r'^usuario/$', views.pessoa_usuario, name='pessoa_usuario'),
@@ -38,7 +38,7 @@ urlpatterns = [
     url(r'^genero_remove/(?P<p_id>\d+)/$', views.pessoa_genero_remove, name='pessoa_genero_remove'),
     url(r'^genero_listagem/', views.pessoa_genero_lista, name='pessoa_genero_lista'),
     url(r'^genero_detalhe/(?P<p_id>[0-9]{,2})/$', views.pessoa_genero_detalhe, name='pessoa_genero_detalhe'),
+    url(r'^permission_error/', views.pessoa_permission_error, name='pessoa_erro_permissao'),
     url(r'^detalhe/$', views.pessoa_detalhe, name='Detalhe'),
     url(r'^sobre/', views.pessoa_sobre, name='Sobre'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

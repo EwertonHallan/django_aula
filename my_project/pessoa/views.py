@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import login_required, permission_required
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -55,7 +56,14 @@ def simple_upload(request):
     contexto = {'form':form}
     return render(request, 'pessoa/upload.html', contexto)
 
+def pessoa_permission_error(request):
+    link = {'link':request.GET.get('next')}
+    return render(request, 'pessoa/erro_permissao.html', link)
+
 # Create your views here.
+@login_required(login_url='/login/')
+@permission_required('pessoa.change_pessoa',login_url='/pessoa/permission_error/')
+#@permission_required('pessoa.add_pessoa',raise_exception=True)
 def pessoa_id(request, p_id):
     pessoas = Pessoa.objects.select_related().get(id=p_id)
     contexto = {'detalhe':pessoas}
@@ -76,6 +84,9 @@ def pessoa_usuario(request):
     if not(request.user.is_authenticated):
        return redirect('login')
     else:
+        if not(request.user.has_perm('pessoa.add_pessoa')):
+            return redirect('/pessoa/permission_error/?next=/pessoa/usuario/')
+
         form = PessoaForm()
         url_form = url_form = '/pessoa/usuario_novo/'
         contexto = {
@@ -89,6 +100,9 @@ def pessoa_usuario_novo(request):
     if not(request.user.is_authenticated):
        return redirect('login')
     else:
+        if not(request.user.has_perm('pessoa.add_pessoa')):
+            return redirect('/pessoa/permission_error/?next=/pessoa/usuario_novo/')
+
         form = PessoaForm(request.POST or None)
         filename = ''
         if request.FILES.has_key('foto'):
@@ -108,6 +122,9 @@ def pessoa_usuario_edicao(request, p_id):
     if not(request.user.is_authenticated):
        return redirect('login')
     else:
+        if not(request.user.has_perm('pessoa.change_pessoa')):
+            return redirect('/pessoa/permission_error/?next=/pessoa/usuario_edicao/')
+
         dados = Pessoa.objects.select_related().get(id=p_id)
         form = PessoaForm(request.POST or None, instance=dados)
         if request.method == 'POST':
@@ -138,6 +155,9 @@ def pessoa_usuario_remove(request, p_id):
     if not(request.user.is_authenticated):
        return redirect('login')
     else:
+        if not(request.user.has_perm('pessoa.delete_pessoa')):
+            return redirect('/pessoa/permission_error/?next=/pessoa/usuario_remove/')
+
         dados = Pessoa.objects.select_related().get(id=p_id)
         if request.method == 'POST':
             dados.delete()
@@ -152,17 +172,23 @@ def pessoa_usuario_remove(request, p_id):
             }
             return render(request,'pessoa/confirmacao.html', contexto)
 
+@login_required(login_url='/login/')
+#@permission_required('pessoa.add_pessoa',login_url='/pessoa/permission_error/')
+#criacao de permissao https://docs.djangoproject.com/pt-br/1.11/topics/auth/default/
 def pessoa_usuario_lista(request):
     if not(request.user.is_authenticated):
        return redirect('login')
     else:
-        dados = Pessoa.objects.all()
+        if not(request.user.has_perm('pessoa.list_pessoa')):
+            return redirect('/pessoa/permission_error/?next=/pessoa/usuario_listagem/')
+
+        dados = Pessoa.objects.all().order_by('-nome','id')
 
         filtro = request.GET
         filtro = request.GET.get('\u201dsearch\u201d')
 
         if filtro:
-            dados = Pessoa.objects.filter(nome__icontains=filtro)
+            dados = Pessoa.objects.filter(nome__icontains=filtro).order_by('?')
 
         result = []
         for i in range(len(dados)):
