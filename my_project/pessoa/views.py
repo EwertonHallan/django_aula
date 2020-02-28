@@ -4,11 +4,15 @@ from __future__ import unicode_literals
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.files.storage import FileSystemStorage
-from django.http import HttpResponseRedirect
+from django.db.models import Q
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 
 # from .forms import PessoaForm
+import io
+from django.template.loader import get_template
 from django.urls import reverse_lazy
+from xhtml2pdf import pisa
 
 from .forms import *
 from .models import Pessoa, Genero
@@ -32,7 +36,6 @@ class Obj_Detalhe():
         return self.titulo + '-' + self.valor
 
 #teste de upload
-
 def simple_upload(request):
     if request.method == 'POST':
         filename = ''
@@ -55,6 +58,27 @@ def simple_upload(request):
     form = DocumentoForm()
     contexto = {'form':form}
     return render(request, 'pessoa/upload.html', contexto)
+
+#Classe para gerar PFD
+class RelatorioPFD:
+    @staticmethod
+    def render(path, params, filename):
+        template = get_template(path)
+        html = template.render(params)
+        response = io.BytesIO()
+        pdf = pisa.pisaDocument(
+            io.BytesIO(html.encode("UTF-8")), response
+        )
+
+        if not pdf.err:
+            response = HttpResponse(
+                response.getvalue(),content_type='application/pdf'
+            )
+
+            response['content-disposition'] = 'attachment; filename=%s.pdf' %filename
+            return response
+        else:
+            return HttpResponse('Error Rendering PDF', status=400)
 
 def pessoa_permission_error(request):
     link = {'link':request.GET.get('next')}
@@ -182,17 +206,20 @@ def pessoa_usuario_lista(request):
         if not(request.user.has_perm('pessoa.list_pessoa')):
             return redirect('/pessoa/permission_error/?next=/pessoa/usuario_listagem/')
 
-        dados = Pessoa.objects.all().order_by('-nome','id')
+        dados = Pessoa.objects.all().order_by('nome','id')
 
         filtro = request.GET
         filtro = request.GET.get('\u201dsearch\u201d')
 
         if filtro:
-            dados = Pessoa.objects.filter(nome__icontains=filtro).order_by('?')
+            where_sql = Q(nome__icontains=filtro)
+            where_sql.add(Q(cpf__icontains=filtro), Q.OR)
+            #where_sql.add(Q(id__exact=filtro), Q.OR)
+            dados = Pessoa.objects.filter(where_sql).order_by('?')
 
         result = []
         for i in range(len(dados)):
-            obj = Obj_Lista(dados[i].id, dados[i])
+            obj = Obj_Lista(dados[i].id, dados[i].nome + ' - ' + dados[i].cpf)
             result.append(obj)
 
         #filtro = request.GET.get('\u201dsearch\u201d') + '->' + request.META['REMOTE_ADDR'] + '' + request.user.username
@@ -235,6 +262,15 @@ def pessoa_usuario_detalhe(request, p_id):
     }
 
     return render(request, 'pessoa/detalhe.html', contexto)
+
+def pessoa_usuario_relatorio(request):
+    pessoas = dados = Pessoa.objects.all()
+    contexto = {
+        'dados':pessoas,
+        'request':request,
+    }
+
+    return RelatorioPFD.render('pessoa/relatorio.html',contexto, 'relatorio_usuario')
 
 def pessoa_genero(request):
     if not(request.user.is_authenticated):

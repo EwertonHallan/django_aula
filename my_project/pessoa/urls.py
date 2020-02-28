@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^usuario_edicao/(?P<p_id>\d+)/$', views.pessoa_usuario_edicao, name='pessoa_usuario_edicao'),
     url(r'^usuario_remove/(?P<p_id>\d+)/$', views.pessoa_usuario_remove, name='pessoa_usuario_remove'),
     url(r'^usuario_listagem/', views.pessoa_usuario_lista, name='pessoa_usuario_lista'),
+    url(r'^usuario_relatorio/', views.pessoa_usuario_relatorio, name='pessoa_usuario_relatorio'),
     url(r'^usuario_detalhe/(?P<p_id>[0-9]{,2})/$', views.pessoa_usuario_detalhe, name='pessoa_usuario_detalhe'),
     url(r'^genero/$', views.pessoa_genero, name='pessoa_genero'),
     url(r'^genero_novo/', views.pessoa_genero_novo, name='pessoa_genero_novo'),
