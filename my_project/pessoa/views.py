@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.files.storage import FileSystemStorage
+from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.db.models import Q
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
@@ -60,6 +61,9 @@ def simple_upload(request):
     return render(request, 'pessoa/upload.html', contexto)
 
 #Classe para gerar PFD
+class Relatorio:
+    pass
+
 class RelatorioPFD:
     @staticmethod
     def render(path, params, filename):
@@ -217,6 +221,30 @@ def pessoa_usuario_lista(request):
             #where_sql.add(Q(id__exact=filtro), Q.OR)
             dados = Pessoa.objects.filter(where_sql).order_by('?')
 
+#paginador
+        paginador = Paginator(dados, 10)
+        try:
+            page = int(request.GET.get('page','1'))
+        except ValueError:
+            page = 1
+
+        try:
+            list_dados = paginador.page(page)
+        except (EmptyPage, InvalidPage):
+            list_dados = paginador.page(paginador.num_pages)
+
+#formata para exibir no template
+        page = {
+            'has_previous':list_dados.has_previous,
+            'previous_page_number':list_dados.previous_page_number,
+            'number':list_dados.number,
+            'num_pages':list_dados.paginator.num_pages,
+            'has_next':list_dados.has_next,
+            'next_page_number':list_dados.next_page_number,
+        }
+
+        dados = list_dados
+
         result = []
         for i in range(len(dados)):
             obj = Obj_Lista(dados[i].id, dados[i].nome + ' - ' + dados[i].cpf)
@@ -224,11 +252,13 @@ def pessoa_usuario_lista(request):
 
         #filtro = request.GET.get('\u201dsearch\u201d') + '->' + request.META['REMOTE_ADDR'] + '' + request.user.username
         #filtro = '\u201dsearch\u201d'[1:7]
+
         contexto = {
             'lista':result,
             'titulo':'Pessoas',
             'url':'/pessoa/usuario_detalhe/',
-            'str_busca':filtro
+            'str_busca':filtro,
+            'page':page,
         }
         return render(request, 'pessoa/listagem.html', contexto)
 
