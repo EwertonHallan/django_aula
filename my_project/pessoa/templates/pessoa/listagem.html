@@ -26,7 +26,7 @@ https://django-portuguese.readthedocs.io/en/1.0/topics/pagination.html
     <div class="pagination">
     <span class="step-links">
         {% if page.has_previous %}
-            <a href="?page={{ page.previous_page_number }}"><<</a>
+            <a href='?”search”={{ str_busca }}&page={{ page.previous_page_number }}'> << </a>
         {% endif %}
 
         <span class="current">
@@ -34,7 +34,7 @@ https://django-portuguese.readthedocs.io/en/1.0/topics/pagination.html
         </span>
 
         {% if page.has_next %}
-            <a href="?page={{ page.next_page_number }}">>></a>
+            <a href='?”search”={{ str_busca }}&page={{ page.next_page_number }}'> >> </a>
         {% endif %}
     </span>
     </div>
