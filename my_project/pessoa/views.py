@@ -66,8 +66,8 @@ class Relatorio:
 
 class RelatorioPFD:
     @staticmethod
-    def render(path, params, filename):
-        template = get_template(path)
+    def render(path_template, params, filename):
+        template = get_template(path_template)
         html = template.render(params)
         response = io.BytesIO()
         pdf = pisa.pisaDocument(
@@ -294,9 +294,26 @@ def pessoa_usuario_detalhe(request, p_id):
     return render(request, 'pessoa/detalhe.html', contexto)
 
 def pessoa_usuario_relatorio(request):
-    pessoas = dados = Pessoa.objects.all()
+    pessoas = Pessoa.objects.all().order_by('nome','id')
+
+    # paginador
+    paginador = Paginator(pessoas, 33)
+
+    pages =[]
+
+    try:
+        #dados_pag1 = paginador.page(1)
+        #num_pages = dados_pag1.paginator.num_pages,
+        num_pages = paginador.page(1).paginator.num_pages
+        for i in range(0,num_pages):
+            pages.append(paginador.page(i+1))
+
+    except (EmptyPage, InvalidPage):
+        pages = []
+
     contexto = {
-        'dados':pessoas,
+        'pages':pages,
+        'num_pages':num_pages,
         'request':request,
     }
 

@@ -13,5 +13,5 @@ else:
    b = int(sys.argv[2])
    c = a+b
 
-   print(f"A soma de {a} com {b} -> {c}")
+   print("A soma de {a} com {b} -> {c}")
 
