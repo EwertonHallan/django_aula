@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.core.files.storage import FileSystemStorage
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.db.models import Q
+from django.db import connection
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 
@@ -21,6 +22,7 @@ from crispy_forms import *
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .util import firstChar
+from .relatorio_pdf import *
 
 class Obj_Lista():
     def __init__(self, id, nome):
@@ -59,30 +61,6 @@ def simple_upload(request):
     form = DocumentoForm()
     contexto = {'form':form}
     return render(request, 'pessoa/upload.html', contexto)
-
-#Classe para gerar PFD
-class Relatorio:
-    pass
-
-class RelatorioPFD:
-    @staticmethod
-    def render(path_template, params, filename):
-        template = get_template(path_template)
-        html = template.render(params)
-        response = io.BytesIO()
-        pdf = pisa.pisaDocument(
-            io.BytesIO(html.encode("UTF-8")), response
-        )
-
-        if not pdf.err:
-            response = HttpResponse(
-                response.getvalue(),content_type='application/pdf'
-            )
-
-            response['content-disposition'] = 'attachment; filename=%s.pdf' %filename
-            return response
-        else:
-            return HttpResponse('Error Rendering PDF', status=400)
 
 def pessoa_permission_error(request):
     link = {'link':request.GET.get('next')}
@@ -296,16 +274,27 @@ def pessoa_usuario_detalhe(request, p_id):
 def pessoa_usuario_relatorio(request):
     pessoas = Pessoa.objects.all().order_by('nome','id')
 
+    tituloColuna = [
+        'ID', 'Nome', 'Pai', 'Mae', 'RG', 'CPF', 'Telefone', 'E-Mail'
+    ]
+    comandoSQL = "" \
+                 "SELECT p.id, p.nome, p.pai, p.mae, " \
+                 "       p.rg, p.cpf, p.telefone, p.email " \
+                 "  FROM pessoa_pessoa p " \
+                 " WHERE p.id < 20 " \
+                 "ORDER BY p.nome"
+
+    rel = Relatorio('Lista de Usuarios')
+    rel.queryDados(tituloColuna, comandoSQL)
+    pessoas = rel.registros
+
     # paginador
+    pages =[]
     paginador = Paginator(pessoas, 33)
 
-    pages =[]
-
     try:
-        #dados_pag1 = paginador.page(1)
-        #num_pages = dados_pag1.paginator.num_pages,
         num_pages = paginador.page(1).paginator.num_pages
-        for i in range(0,num_pages):
+        for i in range(num_pages):
             pages.append(paginador.page(i+1))
 
     except (EmptyPage, InvalidPage):

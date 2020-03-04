@@ -65,6 +65,7 @@
 
     <div id="content_frame">
         {% for page in pages %}
+
             <table width="1000pt" border="0" cellspacing="1" cellpadding="2">
                 <tr>
                     <td colspan="8">
@@ -96,10 +97,10 @@
                         {% endfor %}
             </table>
 
-            <pdf:nextpage>
-
+            {% if page.number < num_pages %}
+                <pdf:nextpage>
+            {% endif %}
         {% endfor %}
-        <p>Paginas {{ num_pages }}</p>
     </div>
 
 </body>
