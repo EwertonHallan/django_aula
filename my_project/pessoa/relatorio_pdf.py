@@ -81,6 +81,7 @@ class Relatorio:
         self.titulo = titulo
         self.tamanho = tamanho
         self.orientacao = orientacao
+        self.pages = []
         self.paginas = 0
         self.reg_pagina = 0
         self.registros = []
@@ -109,6 +110,8 @@ class Relatorio:
             objColuna = self.registros[index][j]
             txt = txt + objColuna.__str__() + ' | '
         return (txt)
+    def montaPages(self):
+        pass
 
 
 r = Relatorio('Rel de Usuarios')

@@ -17,8 +17,8 @@ def validate_even(value):
 
 
 class Documento(models.Model):
-    descricao = models.CharField(max_length=255, blank=True)
-    file = models.ImageField(upload_to='pessoa_fotos/')
+    descricao = models.CharField(max_length=255, blank=True, null=True)
+    file = models.ImageField(upload_to='pessoa_fotos/', blank=True, null=True)
     upload_data = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return self.descricao
@@ -46,6 +46,19 @@ class Genero(models.Model):
 
 
 class Pessoa(models.Model):
+    """
+    Classe para criar pessoa a ser usada no instituto
+    model:'pessoa.Pessoa'
+    autor:'Ewerton Hallan'
+
+    Metodo_name: getPronomeTratamento(self)'
+    Parameters:
+       name : tipo
+           descricao
+    Return:
+        String
+           abreviatura do pronome de tratamento
+    """
     nome=models.CharField(
         max_length=100,
         null=False,
@@ -169,3 +182,5 @@ class Choice(models.Model):
     def __str__(self):
         return self.choice + ' [ ' + self.poll.question + ' ]'
 
+#comandos para o banco
+#https://docs.djangoproject.com/en/3.0/ref/django-admin/#inspectdb

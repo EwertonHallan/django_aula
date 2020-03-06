@@ -25,5 +25,6 @@ class PessoaAdmin(admin.ModelAdmin):
 admin.site.register(Poll)
 admin.site.register(Choice)
 admin.site.register(Genero)
+admin.site.register(Documento)
 
 
