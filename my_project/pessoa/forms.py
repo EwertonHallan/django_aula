@@ -38,8 +38,14 @@ class ValidaEmailField(forms.Field):
 class PessoaForm(forms.ModelForm):
     #foto = forms.ImageField()
     email = ValidaEmailField()
+    email = forms.CharField(widget=forms.TextInput(attrs={'size':'40'}))
     email.help_text = 'Escreva aqui o seu e-mail, lista de e-mails separado por "," '
     email.label = 'E-Mail'
+    email.label_suffix = '->'
+    email.disabled = True
+    #email.required = False
+#https://django-portuguese.readthedocs.io/en/1.0/ref/forms/widgets.html
+#https://docs.djangoproject.com/en/3.0/ref/forms/fields/#required
 
     class Meta:
         model = Pessoa

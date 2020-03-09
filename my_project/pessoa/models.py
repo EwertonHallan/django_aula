@@ -116,6 +116,8 @@ class Pessoa(models.Model):
         max_length=200,
         help_text='Escreva aqui o seu e-mail, lista de e-mails separado por ;',
         verbose_name='E-Mail',
+        null=False,
+        blank=False,
     )
     telefone=models.CharField(
         max_length=15,
