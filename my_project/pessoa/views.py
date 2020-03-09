@@ -141,14 +141,18 @@ def pessoa_usuario_edicao(request, p_id):
                 filename = fs.save('pessoa_fotos/' + myfile.name, myfile)
 
             if form.is_valid():
+                form = form.save(commit=False)
+
                 if len(filename) > 0:
-                    form = form.save(commit=False)
                     form.foto = filename
+
+                form.email = Email.limpaCampo(form.email)
+                #form.email = 'ewerton@gmail.com'
                 form.save()
 
                 return redirect('pessoa_usuario_lista')
         else:
-            url_form = url_form = '/pessoa/usuario_edicao/'+str(dados.id)+'/'
+            url_form = '/pessoa/usuario_edicao/'+str(dados.id)+'/'
             contexto = {
                 'dados':dados,
                 'form': form,
@@ -252,6 +256,7 @@ def pessoa_usuario_detalhe(request, p_id):
         result.append(Obj_Detalhe('Mae',dados.mae))
         result.append(Obj_Detalhe('RG',dados.rg))
         result.append(Obj_Detalhe('CPF',dados.cpf))
+        result.append(Obj_Detalhe('E-Mail',dados.email))
         #result.append(Obj_Detalhe('Foto',"<a href='/upload/" + str(dados.foto) + "' target='_blank'> Visualizar Foto </a>"))
         #url_img = '/upload/' + str(dados.foto)
 

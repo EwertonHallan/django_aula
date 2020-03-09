@@ -20,8 +20,9 @@ class Documento(models.Model):
     descricao = models.CharField(max_length=255, blank=True, null=True)
     file = models.ImageField(upload_to='pessoa_fotos/', blank=True, null=True)
     upload_data = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
-        return self.descricao
+        return self.descricao + ' [modificado em: ' + format(self.upload_data, '%d/%m/%Y %H:%M:%S') + ']'
 
 # Create your models here.
 class Genero(models.Model):
@@ -41,6 +42,7 @@ class Genero(models.Model):
             'blank': 'Valor vazio',
         }
     )
+
     def __str__(self):
         return self.descricao
 
@@ -112,7 +114,7 @@ class Pessoa(models.Model):
     )
     email=models.CharField(
         max_length=200,
-        help_text='Escreva aqui o seu e-mail',
+        help_text='Escreva aqui o seu e-mail, lista de e-mails separado por ;',
         verbose_name='E-Mail',
     )
     telefone=models.CharField(
@@ -165,6 +167,7 @@ class Pessoa(models.Model):
         ordering = ['nome', 'idade']
         verbose_name = 'pessoa'
         verbose_name_plural = 'pessoas'
+        permissions = (('list_pessoa', 'Listagem de Pessoa'),)
 
 
 class Poll(models.Model):
@@ -173,6 +176,12 @@ class Poll(models.Model):
 
     def __str__(self):
         return self.question + ' - ' + format(self.pub_date, '%d/%m/%Y %H:%M:%S')
+
+    class Meta:
+        ordering = ['-pub_date', 'question']
+        verbose_name = 'poll'
+        verbose_name_plural = 'polls'
+        permissions = (('list_poll','Listagem de Poll'),)
 
 class Choice(models.Model):
     poll = models.ForeignKey(Poll)
